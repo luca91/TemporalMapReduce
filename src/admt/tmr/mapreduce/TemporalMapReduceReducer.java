@@ -10,7 +10,15 @@ public class TemporalMapReduceReducer extends Reducer<Text, IntWritable, Text, I
 	
 	@Override
 	public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
-		//TODO
+		int sum = 0, counter = 0;
+		
+		for(IntWritable value : values){
+			sum += value.get();
+			counter++;
+		}
+		
+		int average = sum/counter;
+		context.write(key, new IntWritable(average));
 	}
 
 }

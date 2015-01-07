@@ -10,6 +10,8 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 public class TemporalMapReduceMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
 	
+	public static int minGranularity;
+	
 	@Override
 	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 		String line = value.toString();
@@ -20,20 +22,21 @@ public class TemporalMapReduceMapper extends Mapper<LongWritable, Text, Text, In
 			IntWritable salary = new IntWritable(Integer.parseInt(tokens.nextToken()));
 			int sTime = Integer.parseInt(tokens.nextToken());
 			int eTime = Integer.parseInt(tokens.nextToken());
-			if(TemporalMapReduceDriver.MAX_TIME < eTime)
-				TemporalMapReduceDriver.MAX_TIME = eTime;
-			for(int i = sTime; i <= eTime; i++){
+			int i = 0;
+			for(i = sTime - (sTime % minGranularity); i <= eTime; i += minGranularity){
 				Text time = new Text(String.valueOf(i));
 				context.write(time, salary);
-				for(int j = 1; j <= 4; j++)
+				for(int j = minGranularity; j <= (minGranularity*4); j += minGranularity)
 					if((i+j) <= TemporalMapReduceDriver.MAX_TIME){
 						time = new Text(String.valueOf(i+j));
 						context.write(time, salary);
 					}
 			}
-
+			if(i > eTime){
+				Text time = new Text(String.valueOf(i));
+				context.write(time, salary);
+			}
 		}
-		
 	}
-
+	
 }

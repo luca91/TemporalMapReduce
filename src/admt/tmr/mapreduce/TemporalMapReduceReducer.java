@@ -10,15 +10,22 @@ public class TemporalMapReduceReducer extends Reducer<Text, IntWritable, Text, I
 	
 	@Override
 	public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
-		int sum = 0, counter = 0;
-		
-		for(IntWritable value : values){
-			sum += value.get();
-			counter++;
+		long startTime = System.currentTimeMillis();
+		if(Integer.parseInt(key.toString()) <= TemporalMapReduceDriver.maxTime){
+			int sum = 0, counter = 0;
+			
+			for(IntWritable value : values){
+				sum += value.get();
+				counter++;
+			}
+			
+			int average = sum/counter;
+			context.write(key, new IntWritable(average));
 		}
-		
-		int average = sum/counter;
-		context.write(key, new IntWritable(average));
+		long endTime = System.currentTimeMillis();
+		System.out.println("Reduce task completed in " + (endTime - startTime) + "ms");
+		TemporalMapReduceDriver.reduceTime += (endTime - startTime);
+		TemporalMapReduceDriver.reduceTasks++;
 	}
 
 }

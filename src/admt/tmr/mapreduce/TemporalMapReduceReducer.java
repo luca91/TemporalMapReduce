@@ -23,7 +23,7 @@ public class TemporalMapReduceReducer extends Reducer<Text, IntWritable, Text, I
 			context.write(key, new IntWritable(average));
 		}
 		long endTime = System.currentTimeMillis();
-		System.out.println("Reduce task completed in " + (endTime - startTime) + "ms");
+//		System.out.println("Reduce task completed in " + (endTime - startTime) + "ms");
 		TemporalMapReduceDriver.reduceTime += (endTime - startTime);
 		TemporalMapReduceDriver.reduceTasks++;
 	}

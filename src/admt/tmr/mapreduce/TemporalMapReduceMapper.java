@@ -50,7 +50,7 @@ public class TemporalMapReduceMapper extends Mapper<LongWritable, Text, Text, In
 			}
 		}
 		long endTime = System.currentTimeMillis();
-		System.out.println("Mapping task completed in " + (endTime - startTime) + "ms");
+//		System.out.println("Mapping task completed in " + (endTime - startTime) + "ms");
 		TemporalMapReduceDriver.mappingTime += (endTime - startTime);
 		TemporalMapReduceDriver.mappingTasks++;
 	}

@@ -41,11 +41,10 @@ public class TemporalMapReduceDriver extends Configured implements Tool {
 			delete(output);
 		
 		TemporalMapReduceMapper.minGranularity = Integer.parseInt(args[2]);
-//		MAX_TIME = getMaxEndTime(args[1]);
 		
 		Configuration conf = new Configuration();
 		
-		Job job = new Job(conf, "Temporal Map Reduce");
+		Job job = new Job(conf, "tmr");
 		job.setJarByClass(TemporalMapReduceDriver.class);
 		
 		job.setMapperClass(TemporalMapReduceMapper.class);
@@ -58,7 +57,7 @@ public class TemporalMapReduceDriver extends Configured implements Tool {
 		job.setOutputFormatClass(TextOutputFormat.class);
 		
 		FileInputFormat.addInputPath(job, new Path(args[0]));
-		FileOutputFormat.	setOutputPath(job, new Path(args[1]));
+		FileOutputFormat.setOutputPath(job, new Path(args[1]));
 		
 		return (job.waitForCompletion(true) ? 0 : 1);
 	}
@@ -209,7 +208,7 @@ public class TemporalMapReduceDriver extends Configured implements Tool {
 		System.out.println("Total reduce time: " + reduceTime + "ms");
 		System.out.println("Average mapping time: " + (mappingTime/mappingTasks) + "ms");
 		System.out.println("Average reduce time: " + (reduceTime/reduceTasks) + "ms");
-		System.out.println("Average timestamps created per row: " + (timeUnits/rows));
+		System.out.println("Average time points created per row: " + (timeUnits/rows));
 	}
 
 }
